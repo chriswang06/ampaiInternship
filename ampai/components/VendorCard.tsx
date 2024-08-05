@@ -1,5 +1,11 @@
-import { Card, Image, Text, Badge, Button, Group } from '@mantine/core';
-interface VendorCardProps{
+import { Card, Image, Text, Badge, Button, Group, ActionIcon } from '@mantine/core';
+import { IconCaretDown, IconCaretUp } from '@tabler/icons-react';
+
+interface description {
+  text: string;
+  source: string;
+}
+interface VendorCardProps {
   _id: string;
   status: string;
   action: string;
@@ -7,33 +13,37 @@ interface VendorCardProps{
   country: string;
   url: string;
   logo_clearbit: string;
-  description : string;
+  description: description;
+
 }
-export default function VendorCard({_id, status, action, vendor_name, country, url, logo_clearbit, description}:VendorCardProps) {
+
+export default function VendorCard({ _id, status, action, vendor_name, country, url, logo_clearbit, description }: VendorCardProps) {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
         <Image
           src={logo_clearbit}
           height={160}
-          width ={160}
+          w="auto"
+          fit="contain"
           alt="Logo"
         />
       </Card.Section>
 
-      <Group justify="space-between" mt="md" mb="xs">
+      <Group justify="space-between" mt="md" mb="xs" background-color="blue">
         <Text fw={500}>{vendor_name}</Text>
-        <Badge color="pink">Status: {status}</Badge>
+        {/* <Badge color="pink">Status: {status}</Badge> */}
       </Group>
 
       <Text size="sm" c="dimmed">
-        With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-        activities on and around the fjords of Norway
+        {
+        }   
+        Description
       </Text>
 
-      <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
-      </Button>
+      <ActionIcon variant="default" aria-label="expand">
+        <IconCaretDown style={{ width: '70%', height: '70%' }} stroke={1.5} />
+      </ActionIcon>
     </Card>
   );
 }

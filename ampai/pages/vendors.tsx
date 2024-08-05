@@ -26,10 +26,7 @@ interface VendorProps {
 const Vendor: React.FC<VendorProps> = ({ vendors }) => {
     const [search, setSearch] = useState('');
     const [value, setValue] = useState('');
-    // const result = vendors.filter((vendor)=>vendor.vendor_name.includes(search));
-    // const result = vendors?.filter((vendor) => vendor.vendor_name.includes(search))
     const result = sort(vendors, search);
-    // const result = useEffect(()=>sort(vendors,search),[vendors,search]);
     return (
         <div>
             <h1>
@@ -64,7 +61,6 @@ const Vendor: React.FC<VendorProps> = ({ vendors }) => {
 export default Vendor;
 
  function sort(Vendors:Vendor[],param:string){
-    console.log(Vendors);
     return (Vendors || []).filter((vendor) => vendor.vendor_name.includes(param))
 }
 /* 
