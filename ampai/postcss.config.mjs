@@ -2,6 +2,8 @@
 const config = {
   plugins: {
     tailwindcss: {},
+    'postcss-preset-mantine':{},
+    'postcss-simple-vars':{}
   },
 };
 
