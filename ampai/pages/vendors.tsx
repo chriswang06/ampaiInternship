@@ -3,11 +3,18 @@ import { useState , useEffect} from 'react';
 import clientPromise from "../lib/data";
 import { GetServerSideProps } from 'next';
 import { SourceTextModule } from 'vm';
+import VendorCard from '../components/VendorCard';
 
 // export default function Home() {
 interface Vendor {
     _id: string;
+    status: string;
+    action: string;
     vendor_name: string;
+    country: string;
+    url: string;
+    logo_clearbit: string;
+    description : string;
 }
 
 
@@ -34,22 +41,23 @@ const Vendor: React.FC<VendorProps> = ({ vendors }) => {
                 />
                 <Button variant="filled" onClick={(event) => {
                     setSearch(value);
-                    console.log(value);
-                    console.log(search);
-                    console.log(result);
+     
                 }}>Button</Button>
 
 
             </h1>
             {/* {getResult(result)} */}
-            <ul>
+            {/* <ul>
                 {(result || []).map((vendor) => (
                     <li key={vendor._id}>
                         <h2>Company Name: {vendor.vendor_name}</h2>
                         <h2>ID: {vendor._id}</h2>
                     </li>
                 ))}
-            </ul>
+            </ul> */}
+            {(result || []).map((vendor)=>(
+                <VendorCard {...vendor}/>
+            ))}
         </div>
     );
 };
