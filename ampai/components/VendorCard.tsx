@@ -21,6 +21,7 @@ interface VendorCardProps {
 export default function VendorCard({ _id, status, action, vendor_name, country, url, logo_clearbit, description }: VendorCardProps) {
   
   const [isClicked, setIsClicked]= useState(false);
+
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
@@ -38,14 +39,7 @@ export default function VendorCard({ _id, status, action, vendor_name, country, 
         <Badge color="pink">Status: {status}</Badge>
       </Group>
 
-      <Text size="sm" c="dimmed">
-        {isClicked ? (
-        description?.text
-        ) : (
-          'Click for a Description'
-        )}
-
-      </Text>
+   
       <ActionIcon variant="default" aria-label="expand" onClick={()=>setIsClicked(!isClicked)}>
         {isClicked ? (
           <IconCaretUp style={{ width: '70%', height: '70%' }} stroke={1.5} />
@@ -53,6 +47,17 @@ export default function VendorCard({ _id, status, action, vendor_name, country, 
           <IconCaretDown style={{ width: '70%', height: '70%' }} stroke={1.5} />
         )}     
       </ActionIcon>
+      <Text size="sm" c="dimmed">
+        {isClicked ? (
+        description?.text
+        ) : (
+          'Click for a Description'
+        )}
+      </Text>
+      <Text size="sm" c="dimmed">
+        {isClicked ? `Description source: ${description?.source}` : ""}
+      </Text>
+
     </Card>
   );
 }

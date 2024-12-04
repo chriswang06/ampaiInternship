@@ -8,16 +8,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const db = client.db('ampai');
     
     try {
-        console.log('Search query:', search);
-        let reg = new RegExp(search, "i");
+        if(typeof search ==='string'){
+            console.log('Search query:', search);
+            let reg = new RegExp(search, "i");
 
-        const vendors = await db
-            .collection('vendors')   
-            .find({"vendor_name": {$regex : reg}})
-            .toArray();
+            const vendors = await db
+                .collection('vendors')   
+                .find({"vendor_name": {$regex : reg}})
+                .toArray();
 
-        res.status(200).json({ vendors });
-
+            res.status(200).json({ vendors });
+        }else{
+            res.status(400).json({error: "Invalid Search query"});
+        }
     } catch (error) {
         console.error('Error fetching vendors:', error);
         res.status(500).json({ error: 'Internal Server Error' });
