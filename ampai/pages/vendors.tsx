@@ -21,11 +21,9 @@ interface Vendor {
 const Vendor: React.FC = () => {
   const [search, setSearch] = useState('');
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async () => {
-    setLoading(true); 
     setError(null); 
     try {
         const response = await fetch(`/api/vendors?search=${encodeURIComponent(search)}`);
@@ -35,9 +33,8 @@ const Vendor: React.FC = () => {
     } catch (err: any) {
       console.error('Error fetching vendors:', err);
       setError('Failed to fetch vendors. Please try again.'); 
-    } finally {
-      setLoading(false); 
-    }
+    } 
+
   };
 
   return (
@@ -49,8 +46,9 @@ const Vendor: React.FC = () => {
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
       />
-      <Button variant="filled" onClick={handleSearch} disabled={loading}>
-        {loading ? 'Searching...' : 'Search'}
+      <Button variant="filled" onClick={handleSearch}
+       >
+        Search
       </Button>
 
       {error && <p style={{ color: 'red' }}>{error}</p>} 
@@ -60,7 +58,7 @@ const Vendor: React.FC = () => {
           <VendorCard key={vendor._id} {...vendor} />
         ))
       ) : (
-        !loading && <p>No vendors found.</p> 
+        <p>No vendors found.</p> 
       )}
     </div>
   );
