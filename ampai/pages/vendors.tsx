@@ -19,26 +19,24 @@ interface Vendor {
 }
 
 const Vendor: React.FC = () => {
-  const [search, setSearch] = useState(''); // State for search input value
-  const [vendors, setVendors] = useState<Vendor[]>([]); // State for the fetched vendor data
-  const [loading, setLoading] = useState(false); // State to track loading
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [search, setSearch] = useState('');
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async () => {
-    setLoading(true); // Show loading state
-    setError(null); // Reset error state
+    setLoading(true); 
+    setError(null); 
     try {
         const response = await fetch(`/api/vendors?search=${encodeURIComponent(search)}`);
-        //   if (!response.ok) {
-    //     throw new Error('Failed to fetch vendors');
-    //   }
+
       const data = await response.json();
-      setVendors(data.vendors || []); // Update vendors state
+      setVendors(data.vendors || []); 
     } catch (err: any) {
       console.error('Error fetching vendors:', err);
-      setError('Failed to fetch vendors. Please try again.'); // Set error state
+      setError('Failed to fetch vendors. Please try again.'); 
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false); 
     }
   };
 
@@ -55,14 +53,14 @@ const Vendor: React.FC = () => {
         {loading ? 'Searching...' : 'Search'}
       </Button>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Error message */}
+      {error && <p style={{ color: 'red' }}>{error}</p>} 
 
       {vendors.length > 0 ? (
         vendors.map((vendor) => (
           <VendorCard key={vendor._id} {...vendor} />
         ))
       ) : (
-        !loading && <p>No vendors found.</p> // Show "No vendors found" only when not loading
+        !loading && <p>No vendors found.</p> 
       )}
     </div>
   );
