@@ -9,10 +9,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     try {
         console.log('Search query:', search);
+        let reg = new RegExp(search, "i");
 
         const vendors = await db
             .collection('vendors')   
-            .find({"vendor_name": {$regex : search}})
+            .find({"vendor_name": {$regex : reg}})
             .toArray();
 
         res.status(200).json({ vendors });
