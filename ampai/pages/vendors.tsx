@@ -1,133 +1,71 @@
 import { Button, TextInput } from '@mantine/core';
-import { useState , useEffect} from 'react';
-import clientPromise from "../lib/data";
-import { GetServerSideProps } from 'next';
-import { SourceTextModule } from 'vm';
+import { useState } from 'react';
 import VendorCard from '../components/VendorCard';
 
-// export default function Home() {
+interface Description {
+  text: string;
+  source: string;
+}
+
 interface Vendor {
-    _id: string;
-    status: string;
-    action: string;
-    vendor_name: string;
-    country: string;
-    url: string;
-    logo_clearbit: string;
-    description : string;
+  _id: string;
+  status: string;
+  action: string;
+  vendor_name: string;
+  country: string;
+  url: string;
+  logo_clearbit: string;
+  description: Description;
 }
 
+const Vendor: React.FC = () => {
+  const [search, setSearch] = useState(''); // State for search input value
+  const [vendors, setVendors] = useState<Vendor[]>([]); // State for the fetched vendor data
+  const [loading, setLoading] = useState(false); // State to track loading
+  const [error, setError] = useState<string | null>(null); // State to handle errors
 
-interface VendorProps {
-    vendors: Vendor[];
-}
-
-
-const Vendor: React.FC<VendorProps> = ({ vendors }) => {
-    const [search, setSearch] = useState('');
-    const [value, setValue] = useState('');
-    const result = sort(vendors, search);
-    return (
-        <div>
-            <h1>
-                <TextInput
-                    label="Vendor Name"
-                    placeholder="type name"
-                    value={value}
-                    onChange={(event) => setValue(event.currentTarget.value)}
-                />
-                <Button variant="filled" onClick={(event) => {
-                    setSearch(value);
-     
-                }}>Button</Button>
-
-
-            </h1>
-            {/* {getResult(result)} */}
-            {/* <ul>
-                {(result || []).map((vendor) => (
-                    <li key={vendor._id}>
-                        <h2>Company Name: {vendor.vendor_name}</h2>
-                        <h2>ID: {vendor._id}</h2>
-                    </li>
-                ))}
-            </ul> */}
-            {(result || []).map((vendor)=>(
-                <VendorCard {...vendor}/>
-            ))}
-        </div>
-    );
-};
-export default Vendor;
-
- function sort(Vendors:Vendor[],param:string){
-    return (Vendors || []).filter((vendor) => vendor.vendor_name.includes(param))
-}
-/* 
-    // const { props: { vendors } } = await getServerSideProps();
-
-const Vendors = ({ vendors }: { vendors: Vendor[]} ) => {
-  
-  // const [Vendor, setVendor] = useState([]);
-  const [search, setSearch] = useState('');
-  const [value, setValue] = useState('');
-  // const vendors = [{ _id: "id", vendor_name: "hello"}];
-  const result = (vendors as Vendor[]).filter((vendor) => vendor.vendor_name.includes(search));
-  return (
-      <div>
-          <h1>
-              <TextInput
-                  label="Vendor Name"
-                  placeholder="type name"
-                  value={value}
-                  onChange={(event) => setValue(event.currentTarget.value)}
-              />
-              <Button variant="filled" onClick={() => setSearch(value)}>Button</Button>
-          </h1>
-          <ul>
-              {(result || []).map((vendor) => (
-                  <li key={vendor._id}>
-                      <h2>Vendor Name: {vendor.vendor_name}</h2>
-                      <h2>ID: {vendor._id}</h2>
-                  </li>
-              ))}
-          </ul>
-      </div>
-  );
-// };
-return <Vendors vendors={vendors as Vendor[]} />;
-
-*/
-export const getStaticProps: GetServerSideProps = async () => {
+  const handleSearch = async () => {
+    setLoading(true); // Show loading state
+    setError(null); // Reset error state
     try {
-        const client = await clientPromise;
-        const db = client.db("ampai");
-        const vendors = await db
-            .collection("vendors")
-            .find({})
-            .limit(1000)
-            .toArray();
-        return {
-            props: { vendors: await JSON.parse(JSON.stringify(vendors)) },
-        };
-    } catch (e) {
-        console.error(e);
-        return { props: { vendors: [] } };
+        const response = await fetch(`/api/vendors?search=${encodeURIComponent(search)}`);
+        //   if (!response.ok) {
+    //     throw new Error('Failed to fetch vendors');
+    //   }
+      const data = await response.json();
+      setVendors(data.vendors || []); // Update vendors state
+    } catch (err: any) {
+      console.error('Error fetching vendors:', err);
+      setError('Failed to fetch vendors. Please try again.'); // Set error state
+    } finally {
+      setLoading(false); // Hide loading state
     }
+  };
+
+  return (
+    <div>
+      <h1>Vendor Search</h1>
+      <TextInput
+        label="Vendor Name"
+        placeholder="Type name"
+        value={search}
+        onChange={(event) => setSearch(event.currentTarget.value)}
+      />
+      <Button variant="filled" onClick={handleSearch} disabled={loading}>
+        {loading ? 'Searching...' : 'Search'}
+      </Button>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Error message */}
+
+      {vendors.length > 0 ? (
+        vendors.map((vendor) => (
+          <VendorCard key={vendor._id} {...vendor} />
+        ))
+      ) : (
+        !loading && <p>No vendors found.</p> // Show "No vendors found" only when not loading
+      )}
+    </div>
+  );
 };
 
-// export function SearchBar() {
-//     const [value, setValue] = useState('');
-//     return (
-//       <TextInput
-//       label="Vendor Name"
-//       placeholder="type name"
-//       value = {value}
-//       onChange = {(event) => setValue(event.currentTarget.value)}
-//             />
-//     );
-// // }
-// function SearchButton(){
-//     return <Button variant="filled" onClick ={()=>setSearch(search) }>Button</Button>;
-// }
-// }
+export default Vendor;
