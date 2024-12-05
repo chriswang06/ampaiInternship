@@ -1,6 +1,7 @@
 import { Card, Image, Text, Badge, Button, Group, ActionIcon } from '@mantine/core';
 import { IconCaretDown, IconCaretUp } from '@tabler/icons-react';
 import {useState} from 'react';
+import Link from 'next/link';
 interface Description {
   text: string;
   source: string;
@@ -36,6 +37,7 @@ export default function VendorCard({ _id, status, action, vendor_name, country, 
 
       <Group justify="space-between" mt="md" mb="xs" background-color="blue">
         <Text fw={500}>{vendor_name}</Text>
+        <Text size="sm">ID: {_id}</Text>
         <Badge color="pink">Status: {status}</Badge>
       </Group>
 
@@ -57,6 +59,10 @@ export default function VendorCard({ _id, status, action, vendor_name, country, 
       <Text size="sm" c="dimmed">
         {isClicked ? `Description source: ${description?.source}` : ""}
       </Text>
+      <Link href={`/id/${_id}`}>
+        {isClicked ?'Click Here to View Detailed Information about this Vendor' : '' }
+      
+      </Link>
 
     </Card>
   );

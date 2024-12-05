@@ -27,12 +27,11 @@ const Vendor: React.FC = () => {
     setError(null); 
     try {
         const response = await fetch(`/api/vendors?search=${encodeURIComponent(search)}`);
-
-      const data = await response.json();
-      setVendors(data.vendors || []); 
+        const data = await response.json();
+        setVendors(data.vendors || []); 
     } catch (err: any) {
-      console.error('Error fetching vendors:', err);
-      setError('Failed to fetch vendors. Please try again.'); 
+        console.error('Error fetching vendors:', err);
+        setError('Failed to fetch vendors. Please try again.'); 
     } 
 
   };
@@ -41,8 +40,8 @@ const Vendor: React.FC = () => {
     <div>
       <h1>Vendor Search</h1>
       <TextInput
-        label="Vendor Name"
-        placeholder="Type name"
+        label="Vendor Search"
+        placeholder="Type name or ID"
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
       />

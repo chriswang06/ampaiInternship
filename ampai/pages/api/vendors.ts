@@ -12,12 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             console.log('Search query:', search);
             let reg = new RegExp(search, "i");
 
-            const vendors = await db
+            let vendors = await db
                 .collection('vendors')   
-                .find({"vendor_name": {$regex : reg}})
+                .find({"$or":[
+                    {"vendor_name": {$regex : reg}},{
+                        "_id":search
+                    }]
+                })
                 .toArray();
-
-            res.status(200).json({ vendors });
+            res.status(200).json({ vendors});
         }else{
             res.status(400).json({error: "Invalid Search query"});
         }
