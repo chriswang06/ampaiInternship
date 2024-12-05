@@ -1,6 +1,8 @@
 // import { NextApiRequest, NextApiResponse } from 'next';
 import { GetServerSideProps } from 'next';
 import Link from 'next/Link';
+import {useRouter} from 'next/router';
+import { Button } from '@mantine/core';
 
 export const getServerSideProps: GetServerSideProps = async (context)=>{
     const {_id} = context.query;
@@ -24,9 +26,13 @@ export default function vendorPage({data}: {data : any}){
     if (!data){
         return <div>Error loading vendor data.</div>;
     }
+    const router = useRouter();
+    const goBack = ()=>{
+        router.push('/vendors');
+    }
     return (
         <div>
-            <Link href="../vendors">click here to go back</Link>
+            <Button fullWidth onClick ={goBack}>click here to return to vendor search</Button>
             <h1>Vendor Details</h1>
             <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
